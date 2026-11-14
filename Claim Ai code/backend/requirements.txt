@@ -1,0 +1,35 @@
+# ClaimsRAG backend — direct dependencies only (transitive dependencies are resolved by pip).
+# Python 3.12.
+
+# Runtime
+fastapi==0.162.3
+uvicorn==0.54.0
+pydantic==2.14.3
+pydantic-settings==2.16.2
+
+# Database: schema migrations (Alembic; it requires SQLAlchemy, used here as Core only, with no ORM) and the
+# PostgreSQL driver (psycopg 3; the binary wheel bundles libpq, so the image needs no system packages).
+alembic==1.20.1
+sqlalchemy==2.1.8
+psycopg[binary]==3.3.8
+
+# Password hashing: Argon2id (the reference implementation, through argon2-cffi).
+argon2-cffi==25.1.0
+
+# Access tokens: RS256-signed JWTs (PyJWT). The crypto extra installs cryptography, which RS256 needs; app/config.py
+# also uses cryptography directly to validate the configured key pair, so it is pinned here too.
+PyJWT[crypto]==2.15.1
+cryptography==50.0.2
+
+# PDF text extraction (Phase 3 ingestion), the library chosen in the architecture. The wheel bundles MuPDF, so the
+# image needs no system packages. Licence: AGPL-3.0 or the Artifex commercial licence.
+pymupdf==1.28.2
+
+# Chunk embeddings (Phase 5): BAAI/bge-small-en-v1.5 run locally through ONNX Runtime, CPU only, with no PyTorch
+# and no external API, so policy text never leaves the machine. Apache-2.0; the model is MIT. The model files are
+# downloaded once into backend/.model_cache.
+fastembed==0.9.1
+
+# Testing
+pytest==9.2.0
+httpx2==2.16.0  # for fastapi.testclient.TestClient: Starlette 1.10 imports httpx2; plain httpx is a deprecated fallback that warns

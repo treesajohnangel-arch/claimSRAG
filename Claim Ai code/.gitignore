@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.model_cache/
+
+# Local environment files (may contain secrets). .env.example is not matched and stays tracked.
+.env
+
+# Original policy PDFs stored by scripts/workspace.py (local document storage; never committed)
+.document_storage/
+
+# Frontend
+node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/

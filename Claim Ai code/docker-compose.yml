@@ -1,0 +1,56 @@
+# ClaimsRAG local development stack: FastAPI backend + PostgreSQL with pgvector.
+#
+#   cp .env.example .env      # once; development placeholder values only
+#   docker compose up -d      # add --build after backend changes
+#
+# This is infrastructure only: no ClaimsRAG schema is created (see docker/postgres/init/).
+
+name: claimsrag
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg18-trixie
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env (see .env.example)}
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env (see .env.example)}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (see .env.example)}
+    volumes:
+      # PostgreSQL 18+ images keep data in /var/lib/postgresql/<major>/docker, so the volume mounts one level up.
+      - postgres_data:/var/lib/postgresql
+      # Init scripts run only when the data volume is first initialised.
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+    healthcheck:
+      # TCP check: the temporary server used during first-time init listens only on the Unix socket,
+      # so this reports healthy only once the real server accepts connections.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  backend:
+    build: ./backend
+    environment:
+      # Inside the Compose network PostgreSQL is always the "postgres" service on its container port.
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "127.0.0.1:${BACKEND_HOST_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_data:

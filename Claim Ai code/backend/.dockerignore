@@ -1,0 +1,7 @@
+# Keep the local virtualenv, caches and local env files (which may hold secrets) out of the build context.
+.venv/
+.model_cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env

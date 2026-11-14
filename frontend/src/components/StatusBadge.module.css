@@ -1,0 +1,43 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.answered {
+  border-color: rgb(99 210 154 / 0.25);
+  background: var(--answered-tint);
+  color: var(--answered);
+}
+
+.conflict {
+  border-color: rgb(230 184 92 / 0.25);
+  background: var(--conflict-tint);
+  color: var(--conflict);
+}
+
+.abstained {
+  border-color: rgb(104 169 232 / 0.25);
+  background: var(--abstained-tint);
+  color: var(--abstained);
+}
+
+.neutral {
+  border-color: var(--rule);
+  background: var(--neutral-tint);
+  color: var(--ink-muted);
+}

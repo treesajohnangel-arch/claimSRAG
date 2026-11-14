@@ -1,0 +1,399 @@
+/* ClaimsRAG design tokens and base styles: a dark, evidence-first workspace.
+   Near-black layered surfaces with hairline borders and a faint top highlight; neutral light primary actions; one
+   warm accent kept for the mark, the current place, the grounded-answer indicator, citation markers and evidence
+   highlights. The system's words are IBM Plex Sans; the insurer's words (quoted policy evidence) IBM Plex Serif, so
+   an answer is never mistaken for its source. Provenance data (page, version, codes) uses a monospace face.
+   Every text colour here is at least 4.5:1 on the surfaces it is used on; #686b6e is decorative only. */
+
+:root {
+  /* Surfaces, darkest to lightest. */
+  --canvas: #050607;
+  --surface: #090b0d;
+  --sheet: #101214;
+  --sheet-sunk: #151719;
+  --rail: #090b0d;
+  --hover: rgb(255 255 255 / 0.04);
+  --rule: rgb(255 255 255 / 0.09);
+  --rule-strong: rgb(255 255 255 / 0.15);
+  --highlight-edge: inset 0 1px 0 rgb(255 255 255 / 0.04);
+
+  /* Text. */
+  --ink: #f5f5f5;
+  --ink-muted: #a4a6a8;
+  --ink-faint: #8c8f93;
+  --ink-decor: #686b6e;
+
+  /* The warm accent: identity, current place, AI indicator, citations, highlights. Never every button. */
+  --accent: #ff6b61;
+  --accent-hover: #ff857c;
+  --accent-tint: rgb(255 107 97 / 0.12);
+  --accent-ring: rgb(255 107 97 / 0.4);
+  --mark: rgb(255 107 97 / 0.2);
+
+  /* Neutral primary action. */
+  --action: #f5f5f5;
+  --action-hover: #ffffff;
+  --action-ink: #050607;
+
+  /* Status: always with a label, and an icon for answers. */
+  --answered: #63d29a;
+  --answered-tint: rgb(99 210 154 / 0.12);
+  --conflict: #e6b85c;
+  --conflict-tint: rgb(230 184 92 / 0.12);
+  --abstained: #68a9e8;
+  --abstained-tint: rgb(104 169 232 / 0.12);
+  --neutral-tint: rgb(255 255 255 / 0.06);
+  --danger: #e56b6f;
+  --danger-hover: #ec8487;
+  --danger-tint: rgb(229 107 111 / 0.12);
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.875rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-raised: 0 12px 32px rgb(0 0 0 / 0.45);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --rail-width: 15rem;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--canvas);
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: 1.55;
+  font-feature-settings: "kern" 1;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--accent);
+  scrollbar-color: rgb(255 255 255 / 0.16) transparent;
+}
+
+::selection {
+  background: var(--mark);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: var(--text-xl);
+  font-weight: 500;
+}
+
+h3 {
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+h4 {
+  font-size: var(--text-md);
+  font-weight: 500;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--ink-decor);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 150ms var(--ease-out);
+}
+
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+mark {
+  padding: 0 0.12em;
+  border-radius: 3px;
+  background: var(--mark);
+  color: var(--ink);
+}
+
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* A surface that holds content: hairline border and a faint top highlight. */
+.card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--sheet);
+  box-shadow: var(--highlight-edge);
+}
+
+/* Small labels for provenance data: what a value is, not decoration. */
+.data-label {
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+/* Buttons: one shape across the product. The primary action is neutral; the accent is never a button colour. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out), border-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.button-primary {
+  background: var(--action);
+  color: var(--action-ink);
+}
+
+.button-primary:hover:not(:disabled) {
+  background: var(--action-hover);
+  color: var(--action-ink);
+}
+
+.button-secondary {
+  border-color: var(--rule-strong);
+  background: var(--sheet-sunk);
+  box-shadow: var(--highlight-edge);
+  color: var(--ink);
+}
+
+.button-secondary:hover:not(:disabled) {
+  border-color: rgb(255 255 255 / 0.24);
+  background: #1b1d20;
+}
+
+.button-danger {
+  border-color: rgb(229 107 111 / 0.5);
+  background: var(--danger-tint);
+  color: var(--danger);
+}
+
+.button-danger:hover:not(:disabled) {
+  background: rgb(229 107 111 / 0.2);
+  color: var(--danger-hover);
+}
+
+.button-quiet {
+  min-height: 2rem;
+  padding: 0 var(--space-2);
+  background: transparent;
+  color: var(--ink-muted);
+}
+
+.button-quiet:hover:not(:disabled) {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+/* Form controls share one vocabulary: recessed fields. */
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--sheet-sunk);
+  font-size: var(--text-md);
+  transition: border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+
+.select {
+  appearance: none;
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a4a6a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+}
+
+.select option {
+  background: var(--sheet);
+  color: var(--ink);
+}
+
+.textarea {
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: rgb(255 255 255 / 0.24);
+}
+
+.input:focus-visible,
+.select:focus-visible,
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--ink-faint);
+}
+
+/* Data tables: quiet rows, scrolling inside their wrapper on narrow screens. */
+.table-wrap {
+  position: relative; /* the containing block of screen-reader-only text in cells, so it scrolls with the table */
+  min-width: 0; /* as a grid or flex item, shrink to the column and scroll, instead of widening the page */
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--sheet);
+  box-shadow: var(--highlight-edge);
+}
+
+.table {
+  width: 100%;
+  min-width: 36rem; /* narrower screens scroll the table inside its wrapper, keeping columns readable */
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table th {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-faint);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr {
+  transition: background-color 120ms var(--ease-out);
+}
+
+.table tbody tr:hover td {
+  background: var(--hover);
+}
+
+.num {
+  text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
